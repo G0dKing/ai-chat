@@ -10,6 +10,7 @@ const path = require("path");
 const { OpenAI } = require('openai');
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || "localhost";
+const rateLimit = require('express-rate-limit');
 
 // Initialize
 const app = express();
@@ -17,6 +18,13 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Rate-Limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+});
+app.use(limiter); // 100 requests per 15min per IP address
 
 // OpenAI Client
 const openai = new OpenAI({
