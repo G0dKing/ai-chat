@@ -10,45 +10,63 @@ html {
 body {
     font-family: Raleway, Helvetica, Arial, sans-serif;
     font-size: 16px;
+    color: white;
     line-height: 1.5;
     margin: 0;
-    padding: 32px;
+    padding: 0;
     min-height: 100vh;
+    min-width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background: rgb(13, 28, 37);
-    color: white;
 }
 
-chatContainer {
-    position: fixed;
-    display: block;
-    justify-content: center;
-    align-items: center;
-    width: 80vw;
-    max-width: 80%;
-    height: 80vh;
-    max-height:80%;
-    padding: 10px;
-    margin: 0 auto;
-    border: 2px;
-    border-color: red;
-}
-
-chatHistory {
-    font-size: 18px;
-    background-color:rgb(52, 77, 80);
-}
-
-userInput {
+.chatContainer {
     position: relative;
+    height: 100vh;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.conversation {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px;
+}
+
+.inputArea {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
     display: flex;
-    top:100%;
-    width: 100%;
-    height: auto;
-    font-size: 14px;
     justify-content: center;
-    align-items: center;
+    text-align: left;
+    border-top: 1px solid #ccc;
+}
+.inputArea textarea {
+    width: calc(100% - 80px);
+    margin-right: 10px;
+    font-size: 14px;
+    resize: none;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submitButton {
+    background-color: #014f63;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.submitButton:hover {
+    background-color: #19617d;
 }
