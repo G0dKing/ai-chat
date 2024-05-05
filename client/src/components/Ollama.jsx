@@ -8,6 +8,7 @@ const Ollama = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [typingResponse, setTypingResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userMessage, setUserMessage] = useState("");
 
   const sendMessageToServer = async () => {
     try {
@@ -16,8 +17,11 @@ const Ollama = () => {
         message: userInput,
       });
 
+      setUserMessage(userInput);
+
       const receivedMessage = response.data.message;
-      setChatHistory([...chatHistory, receivedMessage]);
+
+      setChatHistory([...chatHistory, userMessage, receivedMessage]);
       setTypingResponse("");
       setLoading(false);
     } catch (error) {
@@ -48,6 +52,7 @@ const Ollama = () => {
     if (userInput.trim() !== "") {
       sendMessageToServer();
       setUserInput("");
+      setUserMessage("");
     }
   };
 
@@ -61,10 +66,10 @@ const Ollama = () => {
         ))}
         {loading && <div className="loading"><Loader /></div>}
       </div>
-      <div className="userInput">
+      <div className="inputArea">
         <form onSubmit={handleFormSubmit}>
-          <input
-            type="text"
+          <textarea
+            rows={3}
             value={userInput}
             onChange={handleInputChange}
             placeholder="Say something..."
