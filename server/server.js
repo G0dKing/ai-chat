@@ -21,7 +21,7 @@ app.use(express.json());
 // OpenAI Client
 const openai = new OpenAI({
   baseURL: process.env.API_URL,
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.API_KEY,
   stream: true
 });
 

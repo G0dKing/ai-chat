@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
+import Loader from './Loader'
 
 const Ollama = () => {
   const [userInput, setUserInput] = useState("");
@@ -51,14 +52,14 @@ const Ollama = () => {
   };
 
   return (
-    <div>
+    <div className='chatContainer'>
       <div className="chatHistory">
         {chatHistory.map((message, index) => (
           <div key={index}>
             {index < chatHistory.length - 1 ? message : typingResponse}
           </div>
         ))}
-        {loading && <div>Loading...</div>}
+        {loading && <div className="loading"><Loader /></div>}
       </div>
       <div className="userInput">
         <form onSubmit={handleFormSubmit}>
@@ -68,7 +69,7 @@ const Ollama = () => {
             onChange={handleInputChange}
             placeholder="Say something..."
           />
-          <button type="submit">Submit</button>
+          <button  className="submitButton" type="submit">Submit</button>
         </form>
       </div>
     </div>

@@ -1,5 +1,8 @@
 {
     "scripts": {
-        "deploy": "cd client && npm run build && cd ../server && npm run start"
+        "deploy": "cd client && npm run build && cd ../server && npm run start",        "init": "cd client && npm i && cd ../server && npm i",
+        "client": "cd client && npm run dev",
+        "server": "cd server && npm run start",
+        "dev": "cd client && npm run dev && cd ../server && npm run start"
     }
 }

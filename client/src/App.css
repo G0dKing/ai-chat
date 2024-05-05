@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
 html {
     box-sizing: border-box;
 }
@@ -6,7 +8,7 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: Raleway, Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 1.5;
     margin: 0;
@@ -20,9 +22,33 @@ body {
     color: white;
 }
 
+chatContainer {
+    position: fixed;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+    max-width: 80%;
+    height: 80vh;
+    max-height:80%;
+    padding: 10px;
+    margin: 0 auto;
+    border: 2px;
+    border-color: red;
+}
+
+chatHistory {
+    font-size: 18px;
+    background-color:rgb(52, 77, 80);
+}
+
 userInput {
     position: relative;
     display: flex;
+    top:100%;
+    width: 100%;
+    height: auto;
+    font-size: 14px;
     justify-content: center;
-
+    align-items: center;
 }
