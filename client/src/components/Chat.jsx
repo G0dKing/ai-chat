@@ -22,7 +22,6 @@ const Chat = () => {
       setConversation([...conversation, answer]);
       setTyping("");
       setLoading(false);
-
     } catch (error) {
       console.error("Error communicating with server:", error);
       setLoading(false);
@@ -42,11 +41,11 @@ const Chat = () => {
     }
   }, [conversation]);
 
-  const handlePrompt = (event) => {
+  const updatePrompt = (event) => {
     setPrompt(event.target.value);
   };
 
-  const handleFormSubmit = (event) => {
+  const callAPI = (event) => {
     event.preventDefault();
     if (prompt.trim() !== "") {
       sendPrompt();
@@ -55,33 +54,34 @@ const Chat = () => {
   };
 
   return (
-    <div className="container">
-      <div className="chatContainer">
-        <div className="conversation">
-          {conversation.map((message, index) => (
-            <div key={index}>
-              {index < conversation.length - 1 ? message : typing}
-            </div>
-          ))}
-          {loading && (
-            <div className="loading">
-              <Loader />
-            </div>
-          )}
-        </div>
-        <div className="inputArea">
-          <form onSubmit={handleFormSubmit}>
-            <textarea
-              rows={3}
-              value={prompt}
-              onChange={handlePrompt}
-              placeholder="Say something..."
-            />
-            <button className="submitButton" type="submit">
-              Submit
-            </button>
-          </form>
-        </div>
+    <div className="chatContainer">
+      <div className="headerContainer">
+        <h1>Model: LLAMA-3</h1>
+      </div>
+      <div className="conversation">
+        {conversation.map((message, index) => (
+          <div key={index}>
+            {index < conversation.length - 1 ? message : typing}
+          </div>
+        ))}
+        {loading && (
+          <div className="loading">
+            <Loader />
+          </div>
+        )}
+      </div>
+      <div className="input-area">
+        <form onSubmit={callAPI}>
+          <textarea
+            rows={3}
+            value={prompt}
+            onChange={updatePrompt}
+            placeholder="Say something..."
+          />
+          <button className="submitButton" type="submit">
+            SUBMIT
+          </button>
+        </form>
       </div>
     </div>
   );

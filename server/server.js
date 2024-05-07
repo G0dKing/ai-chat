@@ -9,6 +9,7 @@ const { OpenAI } = require('openai');
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || "localhost";
 const rateLimit = require('express-rate-limit');
+const conversation = [];
 
 const app = express();
 
@@ -28,15 +29,13 @@ const openai = new OpenAI({
   stream: true
 });
 
-const conversation = [];
-
 // Chat API
 app.post("/ai-chat", async (req, res) => {
   try {
     const prompt = req.body.message;
 
     const completion = await openai.chat.completions.create({
-      model: 'llama3',
+      model: process.env.AI_MODEL,
       messages: [{ role: 'user', content: prompt }],
     });
 
@@ -57,18 +56,21 @@ app.get("/ai/chat", (req, res) => {
   res.json({ messages: conversation });
 });
 
+// Client Build Files
 app.use(
   express.static(path.join(__dirname, "..", "client", "dist"), {
     maxAge: "1d",
   })
 );
 
+// Fallback Request
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"), {
     cacheControl: true,
   });
 });
 
+// Deploy Express Server
 app.listen(PORT, HOST, "0.0.0.0", () => {
-  console.log(`Static build files deployed at http://${HOST}:${PORT}`);
+  console.log(`Server Status: LIVE ( http://${HOST}:${PORT} )` );
 });
