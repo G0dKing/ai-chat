@@ -1,0 +1,123 @@
+@import 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Raleway:wght@700&display=swap';
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+:root {
+    --textMain: Roboto, sans-serif;
+    --textHeader: Raleway, sans-serif;
+    --colorA: #064f5f;
+    --colorB: #031520;
+    --colorC: rgb(13, 14, 13);
+    --textColor: rgb(255,255,255);
+    --bgColor: rgb(13, 28, 37);
+    --inputColor: rgb(9, 35, 54);
+    --inputText: #E0E0E0;
+    --borderColor: #3f3f3f;
+}
+body {
+    background-color: var(--bgColor);
+    font-family: var(--textMain);
+    color: var(--textColor);
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    font-family: var(--textHeader);
+    font-size: 20px;
+}
+.container {
+    width: 100%;
+    max-width: 80vw;
+    min-width: 320px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.chatContainer {
+    flex-grow: 1;
+    display: flex;
+    height: 95%;
+    min-width: 9%;
+    flex-direction: column;
+    background-color: var(--colorB);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.chatHistory {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+.chatHistory > div {
+    padding: 10px 20px;
+    margin: 5px 0;
+    background-color: var(--colorC);
+    color: var(--textColor);
+    border-radius: 10px;
+    word-wrap: break-word;
+    align-self: flex-start;
+}
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10px;
+}
+.inputArea {
+    padding: 10px;
+    background-color: var(--colorB);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+}
+.inputArea textarea {
+    flex: 1 1 auto;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: var(--inputColor);
+    color: var(--inputText);
+    font-size: 16px;
+    resize: none;
+    margin-right: 10px;
+}
+.submitButton {
+    position: relative;
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    background-color: var(--colorA);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--textColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        min-width: unset;
+    }
+    .chatContainer {
+        margin: 0;
+    }
+}
