@@ -1,81 +1,128 @@
-import { useState, useEffect } from "react";
+import { useState, useReducer } from "react";
 import axios from "axios";
-import Loader from "./Loader";
+import Loading from "./Loading";
 import "./Chat.css";
 
+const initialState = {
+  conversation: [],
+  loading: false,
+  typing: "",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "USER_INPUT":
+      return {
+        ...state,
+        conversation: [
+          ...state.conversation,
+          { type: "user", text: action.payload },
+        ],
+      };
+    case "AI_OUTPUT":
+      return {
+        ...state,
+        conversation: [
+          ...state.conversation,
+          { type: "bot", text: action.payload },
+        ],
+      };
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
+    case "SET_TYPING":
+      return { ...state, typing: action.payload };
+    default:
+      return state;
+  }
+}
+
 const Chat = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [prompt, setPrompt] = useState("");
-  const [conversation, setConversation] = useState([]);
-  const [typing, setTyping] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const sendPrompt = async () => {
+    const sendPrompt = async () => {
+      dispatch({ type: "SET_TYPING", payload: "" });
     try {
-      setLoading(true);
-
+      console.log(`Requesting Data...`);
+      dispatch({ type: "SET_LOADING", payload: true });
       const request = await axios.post("http://localhost:3001/ai-chat", {
         message: prompt,
       });
+        dispatch({ type: "SET_LOADING", payload: false });
+        dispatch({ type: "SET_LOADING", payload: "" });
 
-      const answer = request.data.message;
+      const response = request.data.message;
+      console.log(`GET(200): OK`);
 
-      setConversation([...conversation, answer]);
-      setTyping("");
-      setLoading(false);
+      await typingAnimation(response);
+      dispatch({ type: "AI_OUTPUT", payload: response });
+      dispatch({ type: "SET_TYPING", payload: "" });
     } catch (error) {
       console.error("Error communicating with server:", error);
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const typing = async (request) => {
-      for (let i = 0; i < request.length; i++) {
-        setTyping((prev) => prev + request[i]);
-        await new Promise((resolve) => setTimeout(resolve, 20));
-      }
-    };
-
-    if (conversation.length > 0) {
-      typing(conversation[conversation.length - 1]);
+  const typingAnimation = async (message) => {
+    let accumulatedTyping = "";
+    for (let char of message) {
+      accumulatedTyping += char;
+      dispatch({ type: "SET_TYPING", payload: accumulatedTyping });
+      await new Promise((resolve) => setTimeout(resolve, 20));
     }
-  }, [conversation]);
+  };
 
   const updatePrompt = (event) => {
     setPrompt(event.target.value);
   };
 
-  const callAPI = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (prompt.trim() !== "") {
+      dispatch({ type: "USER_INPUT", payload: prompt });
       sendPrompt();
       setPrompt("");
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit(event);
     }
   };
 
   return (
     <div className="chatContainer">
       <div className="headerContainer">
-        <h1>Model: LLAMA-3</h1>
+        <h1>PARIAH-BOT JR</h1>
       </div>
-      <div className="conversation">
-        {conversation.map((message, index) => (
-          <div key={index}>
-            {index < conversation.length - 1 ? message : typing}
+      <div className="chatWindow">
+        {state.conversation.map((entry, index) => (
+          <div
+            key={index}
+            className={`chatMessage ${
+              entry.type === "user" ? "userChat" : "botChat"
+            }`}
+          >
+            {entry.text}
           </div>
         ))}
-        {loading && (
-          <div className="loading">
-            <Loader />
-          </div>
-        )}
+        <div className='chatMessage botChat'>
+          {state.loading && (
+            <div className="loadingWrapper">
+              <Loading />
+            </div>
+          )}
+          <div>{state.typing}</div>
+        </div>
       </div>
-      <div className="input-area">
-        <form onSubmit={callAPI}>
+      <div className="inputContainer">
+        <form onSubmit={handleSubmit}>
           <textarea
             rows={3}
             value={prompt}
             onChange={updatePrompt}
+            onKeyDown={handleKeyPress}
             placeholder="Say something..."
           />
           <button className="submitButton" type="submit">
