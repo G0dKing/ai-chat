@@ -131,6 +131,8 @@ textarea {
   color: #ffffff34;
   resize: none;
   outline: none;
+  justify-content: left;
+  margin: auto 0;
 }
 textarea:focus {
   border-color: seagreen;

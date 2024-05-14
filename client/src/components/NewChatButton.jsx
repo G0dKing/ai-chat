@@ -1,12 +1,12 @@
 import { } from "react";
 import PropTypes from "prop-types";
-import pencil from "../assets/pencil.png";
+import compose from "../assets/compose.png";
 import "./NewChatButton.css";
 
 const NewChatButton = ({ clearConversation }) => {
   return (
     <button className="newChat" onClick={clearConversation}>
-      <img src={pencil} alt="New Chat" />
+      <img src={compose} alt="New Chat" />
     </button>
   );
 };
