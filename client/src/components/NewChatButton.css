@@ -1,0 +1,21 @@
+.newChat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: auto;
+}
+
+.newChat img {
+  width: 24px;
+  height: 24px;
+}
+
+.newChat:hover img,
+.newChat:active img {
+  filter: drop-shadow(0 0 10px white);
+  transition: filter 0.3s ease;
+}

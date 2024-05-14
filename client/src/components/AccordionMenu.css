@@ -1,0 +1,80 @@
+@import url("./Chat.css");
+
+.accordionMenuContainer {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.accordionButton {
+  font-family: var(--textHeader);
+  font-size: 1rem;
+  font-weight: 600;
+  width: auto;
+  max-width: 150px;
+  margin: 0 auto;
+  background-color: var(--colorB);
+  color: var(--textColor);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+  border: 0.5px solid rgba(46, 139, 86, 0);
+  border-radius: 1px;
+  transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.accordionButton:hover {
+  background-color: var(--userColor);
+  border: 0.5px solid rgb(0, 213, 255);
+}
+
+.accordionContent {
+  max-height: 0;
+  overflow: hidden;
+  max-width: 150px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  background-color: var(--bgColor);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.accordionContent.open {
+  max-height: 200px;
+  padding: 0px;
+}
+
+.accordionItem {
+  padding: 10px;
+  border-bottom: 0.5px solid #00a6c38e;
+  background-color: var(--bgColor);
+  transition: background-color 0.3s ease, border-bottom 0.3s ease, color 0.3s ease;
+  font-size: 1rem;
+}
+
+.accordionItem:hover {
+  background-color: var(--userColor);
+  border-bottom: 0.5px solid #0080ff;
+  color: rgb(0, 247, 255);
+}
+
+.accordionItem:last-child {
+  border-bottom: none;
+}
+
+.accordionItem label {
+  cursor: pointer;
+  display: block;
+  font-size: 1rem;
+}
