@@ -1,4 +1,5 @@
-// server.js
+// server.js //
+
 require("dotenv").config();
 
 const express = require("express");
@@ -16,13 +17,13 @@ app.use(cors());
 app.use(express.json());
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100
+  windowMs: 15 * 60 * 1000, // 15min
+  max: 100, // 100 request limit
 });
-app.use(limiter); // 100 requests per 15min per IP address
+app.use(limiter);
 
-// Completions API
-const openai = new OpenAI({
+// Completions Endpoint
+const ollama = new OpenAI({
   baseURL: process.env.API_URL,
   apiKey: process.env.API_KEY,
   stream: true
@@ -33,17 +34,13 @@ app.post("/ai-chat", async (req, res) => {
   try {
     const prompt = req.body.message;
 
-    const completion = await openai.chat.completions.create({
+    const completion = await ollama.chat.completions.create({
       model: process.env.AI_MODEL,
       messages: [{ role: 'user', content: prompt }],
     });
-
     const response = completion.choices[0].message.content;
-
     conversation.push(response);
-
     res.json({ message: response });
-
   } catch (error) {
     console.error("Error communicating with API:", error);
     res.status(500).json({ error: "Internal server error" });

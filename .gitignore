@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Editor
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -23,8 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
+# User Added
 package-lock.json
 node_modules/
-.env
-.env/
 *.code-workspace

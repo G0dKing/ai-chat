@@ -1,3 +1,5 @@
+// Chat.jsx //
+
 import { useState, useReducer } from "react";
 import axios from "axios";
 import Loading from "./Loading";
@@ -94,7 +96,7 @@ const Chat = () => {
   return (
     <div className="chatContainer">
       <div className="headerContainer">
-        <h1>PARIAH-BOT JR</h1>
+        <h1>Model: LLAMA-3</h1>
       </div>
       <div className="chatWindow">
         {state.conversation.map((entry, index) => (
