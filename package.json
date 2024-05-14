@@ -1,9 +1,12 @@
 {
+    "name": "sojourney",
+    "version": "0.3",
+    "author": "G0dKing",
+    "repo": "https://github.com/G0dKing/ai-chat.git",
     "scripts": {
         "deploy": "cd client && npm run build && cd ../server && npm run start",
+        "dev": "cd client && npm run dev && cd ../server && npm run start",
         "init": "cd client && npm i && cd ../server && npm i",
-        "client": "cd client && npm run dev",
-        "server": "cd server && npm run start",
-        "dev": "cd client && npm run dev && cd ../server && npm run start"
+        "reset": "cd client && rm -rf node_module package-lock.json && npm i && npm run build && cd ../server && rm -rf node_modules package=lock.json && npm i && npm run start"
     }
 }

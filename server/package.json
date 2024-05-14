@@ -1,13 +1,14 @@
 {
   "name": "backend",
   "main": "server.js",
+  "version": "0.3",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "cors": "latest",
     "express": "latest",
-    "express-rate-limit": "^7.2.0",
+    "express-rate-limit": "latest",
     "openai": "latest"
   },
   "devDependencies": {

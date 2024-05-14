@@ -1,5 +1,4 @@
 // server.js //
-
 require("dotenv").config();
 
 const express = require("express");
@@ -22,7 +21,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Completions Endpoint
+// Initialize Ollama with OpenAI Functions
 const ollama = new OpenAI({
   baseURL: process.env.API_URL,
   apiKey: process.env.API_KEY,
