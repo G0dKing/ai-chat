@@ -1,7 +1,7 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
-import useAPI, { actionTypes } from "../hooks/useAPI";
+import useAPI from "../hooks/useAPI";
 import LoadingAnimation from "./LoadingAnimation";
 import ModelSelectMenu from "./ModelSelectMenu";
 import NewChatButton from "./NewChatButton";
@@ -27,23 +27,6 @@ const Chat = () => {
     }
   }, [state.conversation, state.typing, state.loading]);
 
-  const renderedMessages = useMemo(() => {
-    return state.conversation.map((entry, index) => (
-      <div
-        key={index}
-        className={`chatMessage ${
-          entry.type === "user" ? "userChat" : "botChat markdown"
-        }`}
-      >
-        {entry.type === "user" ? (
-          entry.text
-        ) : (
-          <ReactMarkdown remarkPlugins={[gfm]}>{entry.text}</ReactMarkdown>
-        )}
-      </div>
-    ));
-  }, [state.conversation]);
-
   return (
     <div className="chatContainer">
       <div className="headerContainer">
@@ -52,12 +35,25 @@ const Chat = () => {
           models={models}
           selectedModel={state.model}
           onSelectModel={(e) =>
-            dispatch({ type: actionTypes.SET_MODEL, payload: e.target.value })
+            dispatch({ type: "SET_MODEL", payload: e.target.value })
           }
         />
       </div>
       <div className="chatWindow" ref={chatWindowRef}>
-        {renderedMessages}
+        {state.conversation.map((entry, index) => (
+          <div
+            key={index}
+            className={`chatMessage ${
+              entry.type === "user" ? "userChat" : "botChat markdown"
+            }`}
+          >
+            {entry.type === "user" ? (
+              entry.text
+            ) : (
+              <ReactMarkdown remarkPlugins={[gfm]}>{entry.text}</ReactMarkdown>
+            )}
+          </div>
+        ))}
         {state.loading && (
           <div className="chatMessage botChat">
             <div className="loadingWrapper">

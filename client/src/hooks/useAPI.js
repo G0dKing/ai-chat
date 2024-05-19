@@ -18,20 +18,9 @@ const initialState = {
   instruction: "Please respond to the following using Markdown syntax.",
 };
 
-export const actionTypes = {
-  USER_INPUT: "USER_INPUT",
-  AI_OUTPUT: "AI_OUTPUT",
-  SET_LOADING: "SET_LOADING",
-  SET_TYPING: "SET_TYPING",
-  SET_MODEL: "SET_MODEL",
-  SET_ROLE: "SET_ROLE",
-  SET_INSTRUCTION: "SET_INSTRUCTION",
-  CLEAR_CONVERSATION: "CLEAR_CONVERSATION",
-};
-
 function reducer(state, action) {
   switch (action.type) {
-    case actionTypes.USER_INPUT:
+    case "USER_INPUT":
       return {
         ...state,
         conversation: [
@@ -39,7 +28,7 @@ function reducer(state, action) {
           { type: "user", text: action.payload },
         ],
       };
-    case actionTypes.AI_OUTPUT:
+    case "AI_OUTPUT":
       return {
         ...state,
         conversation: [
@@ -47,27 +36,22 @@ function reducer(state, action) {
           { type: "assistant", text: action.payload },
         ],
       };
-    case actionTypes.SET_LOADING:
+    case "SET_LOADING":
       return { ...state, loading: action.payload };
-    case actionTypes.SET_TYPING:
+    case "SET_TYPING":
       return { ...state, typing: action.payload };
-    case actionTypes.SET_MODEL:
+    case "SET_MODEL":
       return { ...state, model: action.payload };
-    case actionTypes.SET_ROLE:
+    case "SET_ROLE":
       return { ...state, role: action.payload };
-    case actionTypes.SET_INSTRUCTION:
+    case "SET_INSTRUCTION":
       return { ...state, instruction: action.payload };
-    case actionTypes.CLEAR_CONVERSATION:
+    case "CLEAR_CONVERSATION":
       return { ...state, conversation: [] };
     default:
       return state;
   }
 }
-
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:3001",
-  timeout: 120000,
-});
 
 const useAPI = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -93,7 +77,7 @@ const useAPI = () => {
     let accumulatedTyping = "";
     for (let char of message) {
       accumulatedTyping += char;
-      dispatch({ type: actionTypes.SET_TYPING, payload: accumulatedTyping });
+      dispatch({ type: "SET_TYPING", payload: accumulatedTyping });
       await new Promise((resolve) => setTimeout(resolve, 10));
     }
   }, []);
@@ -106,8 +90,8 @@ const useAPI = () => {
 
   const sendPrompt = useCallback(async () => {
     try {
-      dispatch({ type: actionTypes.SET_TYPING, payload: "" });
-      dispatch({ type: actionTypes.SET_LOADING, payload: true });
+      dispatch({ type: "SET_TYPING", payload: "" });
+      dispatch({ type: "SET_LOADING", payload: true });
 
       const instruction = getInstruction(state.model);
       const history = [
@@ -118,31 +102,38 @@ const useAPI = () => {
         })),
       ];
 
-      const request = await axiosInstance.post("/ai-chat", {
-        prompt: promptRef.current,
+      const request = await axios.post("http://localhost:3001/ai-chat", {
+        prompt: prompt,
         model: state.model,
         history: history,
       });
 
-      dispatch({ type: actionTypes.SET_LOADING, payload: false });
+      dispatch({ type: "SET_LOADING", payload: false });
 
       const response = request.data.message;
       await typingAnimation(response);
 
-      dispatch({ type: actionTypes.AI_OUTPUT, payload: response });
-      dispatch({ type: actionTypes.SET_TYPING, payload: "" });
+      dispatch({ type: "AI_OUTPUT", payload: response });
+      dispatch({ type: "SET_TYPING", payload: "" });
     } catch (error) {
       console.error("Server Error:", error);
-      dispatch({ type: actionTypes.SET_LOADING, payload: false });
+      dispatch({ type: "SET_LOADING", payload: false });
       dispatch({
-        type: actionTypes.AI_OUTPUT,
+        type: "AI_OUTPUT",
         payload: "Error: Server Error. Please try again later.",
       });
     }
-  }, [getInstruction, typingAnimation, state.model, state.conversation]);
+  }, [
+    prompt,
+    state.model,
+    state.conversation,
+    getInstruction,
+    typingAnimation,
+    dispatch,
+  ]);
 
   const debouncedSendPrompt = useMemo(
-    () => debounce(sendPrompt, 300),
+    () => debounce(() => sendPrompt(), 300),
     [sendPrompt]
   );
 
@@ -155,7 +146,7 @@ const useAPI = () => {
       event.preventDefault();
       if (state.loading || state.typing || !prompt.trim()) return;
 
-      dispatch({ type: actionTypes.USER_INPUT, payload: prompt });
+      dispatch({ type: "USER_INPUT", payload: prompt });
       debouncedSendPrompt();
       setPrompt("");
     },
@@ -173,7 +164,7 @@ const useAPI = () => {
   );
 
   const clearConversation = useCallback(() => {
-    dispatch({ type: actionTypes.CLEAR_CONVERSATION });
+    dispatch({ type: "CLEAR_CONVERSATION" });
     setPrompt("");
   }, []);
 

@@ -1,14 +1,15 @@
+// server.js
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const { OpenAI } = require("openai");
+const OpenAI = require("openai");
 const rateLimit = require("express-rate-limit");
 
 const PORT = process.env.PORT || 3001;
 const HOST = process.env.HOST || "localhost";
 const conversation = [];
-const cache = {};
 
 const app = express();
 
@@ -20,10 +21,10 @@ app.use(express.json());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  message: "Too many requests from this IP, please try again after 15 minutes",
 });
 app.use(limiter);
 
+// API Call Using OpenAI
 const ollama = new OpenAI({
   baseURL: process.env.API_URL,
   apiKey: process.env.API_KEY,
@@ -34,16 +35,7 @@ const ollama = new OpenAI({
 app.post("/ai-chat", async (req, res) => {
   try {
     const { prompt, model, history } = req.body;
-    const cacheKey = `history:${model}:${prompt}`;
-
-    let cachedHistory = cache[cacheKey];
-    if (!cachedHistory) {
-      cachedHistory = history;
-      cache[cacheKey] = history;
-      setTimeout(() => delete cache[cacheKey], 3600 * 1000); // Cache expires in 1 hour
-    }
-
-    const messages = [...cachedHistory, { role: "user", content: prompt }];
+    const messages = [...history, { role: "user", content: prompt }];
 
     const response = await ollama.chat.completions.create({
       model: model || process.env.MODEL,
@@ -51,12 +43,7 @@ app.post("/ai-chat", async (req, res) => {
     });
 
     const messageContent = response.choices[0].message.content;
-
     conversation.push(messageContent);
-
-    cache[cacheKey] = messages;
-    setTimeout(() => delete cache[cacheKey], 3600 * 1000); // Cache expires in 1 hour
-
     res.status(200).json({ message: messageContent });
   } catch (error) {
     console.error("Error:", error);
