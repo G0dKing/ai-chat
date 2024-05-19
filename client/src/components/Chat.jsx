@@ -46,7 +46,7 @@ const Chat = () => {
           </div>
         ))}
         {/* LoadingAnimation: State */}
-        {state.LoadingAnimation && (
+        {state.loading && (
           <div className="chatMessage botChat">
             <div className="LoadingAnimationWrapper">
               <LoadingAnimation />
