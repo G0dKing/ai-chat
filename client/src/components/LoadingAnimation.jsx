@@ -1,7 +1,7 @@
 import { } from 'react'
-import './Animations.css'
+import './styles/Chat.css'
 
-const Loading = () => {
+const LoadingAnimation = () => {
     return (
     <div className="three col">
         <div className="loader" id="loader">
@@ -13,4 +13,4 @@ const Loading = () => {
     )
 }
 
-export default Loading
+export default LoadingAnimation;

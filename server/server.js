@@ -39,8 +39,6 @@ app.post("/ai-chat", async (req, res) => {
       { role: "user", content: prompt },
     ];
 
-  console.log("Message History:", messages);
-
     const completion = await ollama.chat.completions.create({
       model: model || process.env.MODEL,
       messages: messages,

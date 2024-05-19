@@ -1,13 +1,13 @@
-@import url("./Main.css");
+@import url("./Chat.css");
 
-.accordionMenuContainer {
+.modelSelectContainer {
   width: 100%;
   position: relative;
   text-align: center;
   z-index: 1;
 }
 
-.accordionButton {
+.modelSelectButton {
   font-family: var(--textHeader);
   font-size: 1rem;
   font-weight: 600;
@@ -28,12 +28,12 @@
   transition: background-color 0.3s ease, border 0.3s ease;
 }
 
-.accordionButton:hover {
+.modelSelectButton:hover {
   background-color: var(--userColor);
   border: 0.5px solid rgb(0, 213, 255);
 }
 
-.accordionContent {
+.modelSelectContent {
   max-height: 0;
   overflow: hidden;
   max-width: 150px;
@@ -50,12 +50,12 @@
   z-index: 10;
 }
 
-.accordionContent.open {
+.modelSelectContent.open {
   max-height: 200px;
   padding: 0px;
 }
 
-.accordionItem {
+.modelSelectItem {
   padding: 10px;
   border-bottom: 0.5px solid #00a6c38e;
   background-color: var(--bgColor);
@@ -63,17 +63,17 @@
   font-size: 1rem;
 }
 
-.accordionItem:hover {
+.modelSelectItem:hover {
   background-color: var(--userColor);
   border-bottom: 0.5px solid #0080ff;
   color: rgb(0, 247, 255);
 }
 
-.accordionItem:last-child {
+.modelSelectItem:last-child {
   border-bottom: none;
 }
 
-.accordionItem label {
+.modelSelectItem label {
   cursor: pointer;
   display: block;
   font-size: 1rem;

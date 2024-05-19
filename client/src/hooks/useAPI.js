@@ -25,7 +25,7 @@ function reducer(state, action) {
         ...state,
         conversation: [
           ...state.conversation,
-          { type: "assistant", text: action.payload }, // Changed 'bot' to 'assistant'
+          { type: "assistant", text: action.payload },
         ],
       };
     case "SET_LOADING":
@@ -39,7 +39,7 @@ function reducer(state, action) {
     case "SET_INSTRUCTION":
       return { ...state, instruction: action.payload };
     case "CLEAR_CONVERSATION":
-      return { ...state, conversation: [] }; // Clears conversation history
+      return { ...state, conversation: [] };
     default:
       return state;
   }
@@ -69,7 +69,7 @@ const useAPI = () => {
     for (let char of message) {
       accumulatedTyping += char;
       dispatch({ type: "SET_TYPING", payload: accumulatedTyping });
-      await new Promise((resolve) => setTimeout(resolve, 10)); // Speed up typing animation
+      await new Promise((resolve) => setTimeout(resolve, 10));
     }
   }, []);
 

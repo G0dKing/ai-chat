@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import useAPI from "../hooks/useAPI";
-import Loading from "./Animations";
-import AccordionMenu from "./Menus";
-import NewChat from "./Buttons";
-import "./Main.css";
+import LoadingAnimation from "./LoadingAnimation";
+import ModelSelectMenu from "./ModelSelectMenu";
+import NewChatButton from "./NewChatButton";
+import "./styles/Chat.css";
 
-const Main = () => {
+// Main Chatbot Logic
+const Chat = () => {
   const { state, prompt, updatePrompt, submitPrompt, submitOnEnter, clearConversation, dispatch } =
     useAPI();
 
@@ -16,16 +17,15 @@ const Main = () => {
     if (chatWindowRef.current) {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
     }
-  }, [state.conversation, state.typing, state.loading]);
+  }, [state.conversation, state.typing, state.LoadingAnimation]);
 
   // Render in Browser
   return (
     <div className="chatContainer">
-      {/* Header Container */}
       <div className="headerContainer">
-        {/* Menu */}
-        <NewChat clearConversation={clearConversation} />
-        <AccordionMenu
+        {/* Model Select Menu */}
+        <NewChatButton clearConversation={clearConversation} />
+        <ModelSelectMenu
           models={models}
           selectedModel={state.model}
           onSelectModel={(e) =>
@@ -45,11 +45,11 @@ const Main = () => {
             {entry.text}
           </div>
         ))}
-        {/* Loading: State */}
-        {state.loading && (
+        {/* LoadingAnimation: State */}
+        {state.LoadingAnimation && (
           <div className="chatMessage botChat">
-            <div className="loadingWrapper">
-              <Loading />
+            <div className="LoadingAnimationWrapper">
+              <LoadingAnimation />
             </div>
           </div>
         )}
@@ -77,4 +77,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Chat;
