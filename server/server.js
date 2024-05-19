@@ -23,7 +23,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Initialize OpenAI Instance
+// Initialize Ollama via OpenAI Functions
 const ollama = new OpenAI({
   baseURL: process.env.API_URL,
   apiKey: process.env.API_KEY,
@@ -33,16 +33,13 @@ const ollama = new OpenAI({
 // Chat API
 app.post("/ai-chat", async (req, res) => {
   try {
-    const { prompt, model, role, instruction } = req.body;
-
-    // Log request body for debugging
-    console.log("Request body:", req.body);
-
+    const { prompt, model, history } = req.body;
     const messages = [
-      {
-        role: "system" || process.env.ROLE, content: instruction || process.env.INSTRUCTION ||'You are a helpful assistant' ,},
+      ...history,
       { role: "user", content: prompt },
     ];
+
+  console.log("Message History:", messages);
 
     const completion = await ollama.chat.completions.create({
       model: model || process.env.MODEL,
@@ -52,8 +49,9 @@ app.post("/ai-chat", async (req, res) => {
     const response = completion.choices[0].message.content;
     conversation.push(response);
     res.status(200).json({ message: response });
+
   } catch (error) {
-    console.error("Error:", error); // Improved error logging
+    console.error("Error:", error);
     res.status(500).json({ error: "Server Error" });
   }
 });
@@ -78,6 +76,6 @@ app.get("*", (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server Status: LIVE ( http://${HOST}:${PORT} )`);
 });

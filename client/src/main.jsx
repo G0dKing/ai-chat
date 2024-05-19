@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Chat from './components/Chat'
+import Main from './components/Main'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Chat />
+    <Main />
   </React.StrictMode>,
 )

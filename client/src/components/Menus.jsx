@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import "./AccordionMenu.css";
+import "./Menus.css";
 
 const AccordionMenu = ({ models, selectedModel, onSelectModel }) => {
   const [isOpen, setIsOpen] = useState(false);

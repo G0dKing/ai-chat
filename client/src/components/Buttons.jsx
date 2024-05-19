@@ -1,9 +1,9 @@
 import { } from "react";
 import PropTypes from "prop-types";
 import compose from "../assets/compose.png";
-import "./NewChatButton.css";
+import "./Buttons.css";
 
-const NewChatButton = ({ clearConversation }) => {
+const NewChat = ({ clearConversation }) => {
   return (
     <button className="newChat" onClick={clearConversation}>
       <img src={compose} alt="New Chat" />
@@ -12,8 +12,8 @@ const NewChatButton = ({ clearConversation }) => {
 };
 
 // Validate prop types
-NewChatButton.propTypes = {
+NewChat.propTypes = {
   clearConversation: PropTypes.func.isRequired,
 };
 
-export default NewChatButton;
+export default NewChat;

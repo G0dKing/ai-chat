@@ -1,14 +1,13 @@
 import { useEffect, useRef } from "react";
-import useChat from "../hooks/useChat";
-import Loading from "./Loading";
-import AccordionMenu from "./AccordionMenu";
-import NewChatButton from "./NewChatButton";
+import useAPI from "../hooks/useAPI";
+import Loading from "./Animations";
+import AccordionMenu from "./Menus";
+import NewChat from "./Buttons";
+import "./Main.css";
 
-import "./Chat.css";
-
-const Chat = () => {
+const Main = () => {
   const { state, prompt, updatePrompt, submitPrompt, submitOnEnter, clearConversation, dispatch } =
-    useChat();
+    useAPI();
 
   const models = ["llama3", "codellama", "gemma", "mistral"];
   const chatWindowRef = useRef(null);
@@ -19,11 +18,13 @@ const Chat = () => {
     }
   }, [state.conversation, state.typing, state.loading]);
 
+  // Render in Browser
   return (
     <div className="chatContainer">
       {/* Header Container */}
       <div className="headerContainer">
-        <NewChatButton clearConversation={clearConversation} />
+        {/* Menu */}
+        <NewChat clearConversation={clearConversation} />
         <AccordionMenu
           models={models}
           selectedModel={state.model}
@@ -32,8 +33,7 @@ const Chat = () => {
           }
         />
       </div>
-
-      {/* Message Display Window */}
+      {/* Chat Window */}
       <div className="chatWindow" ref={chatWindowRef}>
         {state.conversation.map((entry, index) => (
           <div
@@ -45,8 +45,7 @@ const Chat = () => {
             {entry.text}
           </div>
         ))}
-
-        {/* Loading State */}
+        {/* Loading: State */}
         {state.loading && (
           <div className="chatMessage botChat">
             <div className="loadingWrapper">
@@ -54,14 +53,12 @@ const Chat = () => {
             </div>
           </div>
         )}
-
-        {/* Simulated-Typing State */}
+        {/*Real-time Typing Effect: State */}
         {state.typing && (
           <div className="chatMessage botChat">{state.typing}</div>
         )}
       </div>
-
-      {/* User Input Area */}
+      {/* User Input Section */}
       <div className="inputContainer">
         <form onSubmit={submitPrompt}>
           <textarea
@@ -80,4 +77,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Main;
