@@ -6,10 +6,13 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "cors": "latest",
     "express": "latest",
     "express-rate-limit": "latest",
-    "openai": "latest"
+    "ollama": "^0.5.1",
+    "openai": "^4.47.1",
+    "redis": "^4.6.14"
   },
   "devDependencies": {
     "dotenv": "latest"

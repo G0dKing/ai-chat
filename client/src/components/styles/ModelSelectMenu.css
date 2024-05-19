@@ -29,8 +29,9 @@
 }
 
 .modelSelectButton:hover {
-  background-color: var(--userColor);
+  background-color: #87ceeb;
   border: 0.5px solid rgb(0, 213, 255);
+  color:  rgb(8, 45, 46);
 }
 
 .modelSelectContent {
@@ -64,9 +65,9 @@
 }
 
 .modelSelectItem:hover {
-  background-color: var(--userColor);
+  background-color: #87ceeb;
   border-bottom: 0.5px solid #0080ff;
-  color: rgb(0, 247, 255);
+  color: rgb(8, 45, 46);
 }
 
 .modelSelectItem:last-child {

@@ -38,7 +38,7 @@ html, body {
 
 .container {
   width: 100%;
-  max-width: 104vw;
+  max-width: 100vw;
   min-width: 416px;
   height: 100%;
   display: flex;
@@ -64,17 +64,12 @@ html, body {
   padding: 10px;
 }
 
-h1 {
+.headerContainer h1 {
   font-family: Raleway, sans-serif;
   font-size: 1rem;
   margin: 5px 0;
 }
 
-.loadingWrapper {
-  display: flex;
-  justify-content: center;
-  height: auto;
-}
 .chatWindow {
   flex: 1;
   padding: 10px;
@@ -86,18 +81,22 @@ h1 {
   border: 1px solid rgba(5, 78, 60, 0.292);
   box-shadow: 0 0 1px #0ff3;
 }
+
 .chatMessage {
-  display: flex;
-  max-width: 50%;
+  display: block;
+  max-width: 45%;
   min-width: auto;
+  line-height: 1.2;
+  white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-word;
   overflow-wrap: break-word;
   margin-bottom: 8px;
   padding: 6px 12px;
   border-radius: 18px;
-  box-shadow: 0 1px 1.5px #0003;
+  box-shadow: 0 1px 1.5px rgba(0, 18, 14, 0.719);
 }
+
 .userChat {
   justify-content: flex-end;
   align-self: flex-end;
@@ -111,6 +110,72 @@ h1 {
   color: #fff;
 }
 
+/* Markdown Styles */
+.markdown * {
+  margin: 0;
+  padding: 0;
+}
+.markdown h1,h2,h3,h4,h5,h6 {
+  font-weight: 400;
+  padding-left: 2px;
+  padding-bottom: 2px;
+   text-shadow: 1px 1px 1px black;
+}
+.markdown h1 {
+  font-size: 1.6em;
+}
+.markdown h2 {
+  font-size: 1.4em;
+}
+.markdown h3 {
+  font-size: 1.2em;
+}
+.markdown h4 {
+  font-size: 1em;
+}
+.markdown h5 {
+  font-size: 0.8em;
+}
+.markdown h6 {
+  font-size: 0.6em;
+}
+.markdown ul,
+.markdown ol {
+  padding-left: 15px;
+}
+.markdown li {
+  padding-bottom: 2px;
+}
+.markdown strong {
+  font-weight: 500;
+  text-shadow: 1px 1px 1px black;
+}
+.markdown a {
+  color: #9402c9;
+  text-decoration: underline;
+}
+.markdown a:hover {
+  color: #dda8f6;
+  text-decoration: none;
+}
+.markdown code {
+  background-color: #151c25;
+  border-radius: 3px;
+  color: rgb(37, 227, 138);
+  padding: 2px 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  overflow-x: auto;
+}
+.markdown blockquote {
+  margin: 0;
+  padding: 5px 15px;
+  background-color: #a060ff;
+  color: rgb(243, 199, 255);
+  border-left: 5px solid #f5004e;
+}
+/* End Markdown Styles */
+
 .inputContainer {
   padding: 10px;
   width: 95%;
@@ -119,13 +184,13 @@ h1 {
   display: flex;
   justify-content: center;
 }
-textarea {
+.inputContainer textarea {
   width: 100%;
   max-width: 100%;
   min-width: 95vw;
   padding: 13px;
   font-size: 1rem;
-  border: 1px solid rgba(7, 54, 60, 0.447);
+  border: 1px solid #07363c72;
   border-radius: 4px;
   background-color: #092336;
   color: #ffffff34;
@@ -134,8 +199,8 @@ textarea {
   justify-content: left;
   margin: auto 0;
 }
-textarea:focus {
-  border-color: seagreen;
+.inputContainer textarea:focus {
+  border-color: #07363c72;
   color: var(--textColor);
 }
 
@@ -163,6 +228,12 @@ textarea:focus {
   border-color: black;
 }
 
+/* Loading Animation */
+.loadingWrapper {
+  display: flex;
+  justify-content: center;
+  height: auto;
+}
 #loader span {
   position: relative;
   display: inline-block;
@@ -192,6 +263,8 @@ textarea:focus {
   }
 }
 
+/* Responsive Design */
+/* Smartphones */
 @media (max-width: 600px) {
   .container,
   .chatContainer {

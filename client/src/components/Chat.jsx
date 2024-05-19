@@ -1,14 +1,22 @@
-import { useEffect, useRef } from "react";
-import useAPI from "../hooks/useAPI";
+import { useEffect, useRef, useMemo } from "react";
+import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
+import useAPI, { actionTypes } from "../hooks/useAPI";
 import LoadingAnimation from "./LoadingAnimation";
 import ModelSelectMenu from "./ModelSelectMenu";
 import NewChatButton from "./NewChatButton";
 import "./styles/Chat.css";
 
-// Main Chatbot Logic
 const Chat = () => {
-  const { state, prompt, updatePrompt, submitPrompt, submitOnEnter, clearConversation, dispatch } =
-    useAPI();
+  const {
+    state,
+    prompt,
+    updatePrompt,
+    submitPrompt,
+    submitOnEnter,
+    clearConversation,
+    dispatch,
+  } = useAPI();
 
   const models = ["llama3", "codellama", "gemma", "mistral"];
   const chatWindowRef = useRef(null);
@@ -17,48 +25,52 @@ const Chat = () => {
     if (chatWindowRef.current) {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
     }
-  }, [state.conversation, state.typing, state.LoadingAnimation]);
+  }, [state.conversation, state.typing, state.loading]);
 
-  // Render in Browser
+  const renderedMessages = useMemo(() => {
+    return state.conversation.map((entry, index) => (
+      <div
+        key={index}
+        className={`chatMessage ${
+          entry.type === "user" ? "userChat" : "botChat markdown"
+        }`}
+      >
+        {entry.type === "user" ? (
+          entry.text
+        ) : (
+          <ReactMarkdown remarkPlugins={[gfm]}>{entry.text}</ReactMarkdown>
+        )}
+      </div>
+    ));
+  }, [state.conversation]);
+
   return (
     <div className="chatContainer">
       <div className="headerContainer">
-        {/* Model Select Menu */}
         <NewChatButton clearConversation={clearConversation} />
         <ModelSelectMenu
           models={models}
           selectedModel={state.model}
           onSelectModel={(e) =>
-            dispatch({ type: "SET_MODEL", payload: e.target.value })
+            dispatch({ type: actionTypes.SET_MODEL, payload: e.target.value })
           }
         />
       </div>
-      {/* Chat Window */}
       <div className="chatWindow" ref={chatWindowRef}>
-        {state.conversation.map((entry, index) => (
-          <div
-            key={index}
-            className={`chatMessage ${
-              entry.type === "user" ? "userChat" : "botChat"
-            }`}
-          >
-            {entry.text}
-          </div>
-        ))}
-        {/* LoadingAnimation: State */}
+        {renderedMessages}
         {state.loading && (
           <div className="chatMessage botChat">
-            <div className="LoadingAnimationWrapper">
+            <div className="loadingWrapper">
               <LoadingAnimation />
             </div>
           </div>
         )}
-        {/*Real-time Typing Effect: State */}
         {state.typing && (
-          <div className="chatMessage botChat">{state.typing}</div>
+          <div className="chatMessage botChat markdown">
+            <ReactMarkdown remarkPlugins={[gfm]}>{state.typing}</ReactMarkdown>
+          </div>
         )}
       </div>
-      {/* User Input Section */}
       <div className="inputContainer">
         <form onSubmit={submitPrompt}>
           <textarea
