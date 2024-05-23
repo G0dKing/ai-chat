@@ -18,16 +18,7 @@ const Chat = () => {
     dispatch,
   } = useAPI();
 
-  const modelOptions = {
-    "Llama-2": "meta-llama/Llama-2-7b-chat-hf",
-    CodeLlama: "facebook/incoder-6B",
-    Mistral: "mistralai/Mistral-7B",
-    Phi: "openai-gpt-3",
-    Gemma: "gemma-llm-6b",
-    "GPT Neo": "EleutherAI/gpt-neo-2.7B",
-  };
-
-  const models = Object.keys(modelOptions);
+  const models = ["llama3", "codellama", "gemma", "mistral"];
   const chatWindowRef = useRef(null);
 
   useEffect(() => {
@@ -42,21 +33,16 @@ const Chat = () => {
         <NewChatButton clearConversation={clearConversation} />
         <ModelSelectMenu
           models={models}
-          selectedModel={models.find(
-            (model) => modelOptions[model] === state.model
-          )}
+          selectedModel={state.model}
           onSelectModel={(e) =>
-            dispatch({
-              type: "SET_MODEL",
-              payload: modelOptions[e.target.value],
-            })
+            dispatch({ type: "SET_MODEL", payload: e.target.value })
           }
         />
       </div>
       <div className="chatWindow" ref={chatWindowRef}>
         {state.conversation.map((entry, index) => (
           <div
-            key={entry.id || index} // Assuming an 'id' could be a part of the entry
+            key={index}
             className={`chatMessage ${
               entry.type === "user" ? "userChat" : "botChat markdown"
             }`}

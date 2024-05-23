@@ -1,11 +1,19 @@
-import { useReducer, useState, useCallback, useEffect, useRef } from "react";
+import {
+  useReducer,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
 import axios from "axios";
+import debounce from "lodash/debounce";
 
 const initialState = {
   conversation: [],
   loading: false,
   typing: "",
-  model: import.meta.env.VITE_AI_MODEL || "meta-llama/Llama-2-7b-chat-hf",
+  model: import.meta.env.VITE_AI_MODEL || "llama3",
   role: import.meta.env.VITE_ROLE || "system",
   instruction: "Please respond to the following using Markdown syntax.",
 };
@@ -42,7 +50,8 @@ function reducer(state, action) {
       return { ...state, conversation: [] };
     default:
       return state;
-  }}
+  }
+}
 
 const useAPI = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -51,18 +60,14 @@ const useAPI = () => {
   const getInstruction = useCallback((model) => {
     let instruction = "Please format your response using Markdown syntax.";
     switch (model) {
-      case "meta-llama/Llama-2-7b-chat-hf":
-        return (import.meta.env.VITE_INSTRUCTION_LLAMA2) + instruction;
-      case "facebook/incoder-6B":
-        return (import.meta.env.VITE_INSTRUCTION_CODELLAMA) + instruction;
-      case "mistralai/Mistral-7B":
-        return (import.meta.env.VITE_INSTRUCTION_MISTRAL) + instruction;
-      case "openai-gpt-3":
-        return (import.meta.env.VITE_INSTRUCTION_PHI) + instruction;
-      case "gemma-llm-6b":
-        return (import.meta.env.VITE_INSTRUCTION_GEMMA) + instruction;
-      case "EleutherAI/gpt-neo-2.7B":
-        return (import.meta.env.VITE_INSTRUCTION_GPT_NEO) + instruction;
+      case "llama3":
+        return import.meta.env.VITE_INSTRUCTION_LLAMA3 + instruction;
+      case "codellama":
+        return import.meta.env.VITE_INSTRUCTION_CODELLAMA + instruction;
+      case "gemma":
+        return import.meta.env.VITE_INSTRUCTION_GEMMA + instruction;
+      case "mistral":
+        return import.meta.env.VITE_INSTRUCTION_MISTRAL + instruction;
       default:
         return "You are a helpful AI assistant." + instruction;
     }
@@ -73,7 +78,7 @@ const useAPI = () => {
     for (let char of message) {
       accumulatedTyping += char;
       dispatch({ type: "SET_TYPING", payload: accumulatedTyping });
-      await new Promise((resolve) => setTimeout(resolve, 15));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     }
   }, []);
 
@@ -97,17 +102,15 @@ const useAPI = () => {
         })),
       ];
 
-      console.log("Sending request with history:", history);
-
-      const request = await axios.post("http://localhost:3030/ai-chat", {
-        prompt: promptRef.current,
+      const request = await axios.post("http://localhost:3001/ai-chat", {
+        prompt: prompt,
         model: state.model,
+        history: history,
       });
 
       dispatch({ type: "SET_LOADING", payload: false });
 
       const response = request.data.message;
-      console.log("Received response:", response);
       await typingAnimation(response);
 
       dispatch({ type: "AI_OUTPUT", payload: response });
@@ -121,12 +124,18 @@ const useAPI = () => {
       });
     }
   }, [
+    prompt,
     state.model,
     state.conversation,
     getInstruction,
     typingAnimation,
     dispatch,
   ]);
+
+  const debouncedSendPrompt = useMemo(
+    () => debounce(() => sendPrompt(), 300),
+    [sendPrompt]
+  );
 
   const updatePrompt = useCallback((event) => {
     setPrompt(event.target.value);
@@ -135,13 +144,13 @@ const useAPI = () => {
   const submitPrompt = useCallback(
     (event) => {
       event.preventDefault();
-      if (state.loading || state.typing || !promptRef.current.trim()) return;
+      if (state.loading || state.typing || !prompt.trim()) return;
 
-      dispatch({ type: "USER_INPUT", payload: promptRef.current });
-      sendPrompt();
+      dispatch({ type: "USER_INPUT", payload: prompt });
+      debouncedSendPrompt();
       setPrompt("");
     },
-    [state.loading, state.typing, sendPrompt]
+    [state.loading, state.typing, prompt, debouncedSendPrompt]
   );
 
   const submitOnEnter = useCallback(
