@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import "./AccordionMenu.css";
+import "./styles/ModelSelectMenu.css";
 
-const AccordionMenu = ({ models, selectedModel, onSelectModel }) => {
+const ModelSelectMenu = ({ models, selectedModel, onSelectModel }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
-  const toggleAccordion = () => {
+  const togglemodelSelect = () => {
     setIsOpen(!isOpen);
   };
 
   const handleSelectModel = (modelName) => {
     onSelectModel({ target: { value: modelName } });
-    setIsOpen(false); // Close the accordion after selecting a model
+    setIsOpen(false); // Close the modelSelect after selecting a model
   };
 
   const handleClickOutside = (event) => {
@@ -29,15 +29,15 @@ const AccordionMenu = ({ models, selectedModel, onSelectModel }) => {
   }, []);
 
   return (
-    <div className="accordionMenuContainer" ref={menuRef}>
-      <button className="accordionButton" onClick={toggleAccordion}>
+    <div className="modelSelectContainer" ref={menuRef}>
+      <button className="modelSelectButton" onClick={togglemodelSelect}>
         {isOpen ? "▲" : "▼"} {selectedModel}
       </button>
-      <div className={`accordionContent ${isOpen ? "open" : ""}`}>
+      <div className={`modelSelectContent ${isOpen ? "open" : ""}`}>
         {models.map((modelName, index) => (
           <div
             key={index}
-            className="accordionItem"
+            className="modelSelectItem"
             onClick={() => handleSelectModel(modelName)}
           >
             <label>{modelName}</label>
@@ -48,10 +48,10 @@ const AccordionMenu = ({ models, selectedModel, onSelectModel }) => {
   );
 };
 
-AccordionMenu.propTypes = {
+ModelSelectMenu.propTypes = {
   models: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedModel: PropTypes.string.isRequired,
   onSelectModel: PropTypes.func.isRequired,
 };
 
-export default AccordionMenu;
+export default ModelSelectMenu;

@@ -1,14 +1,22 @@
 import { useEffect, useRef } from "react";
-import useChat from "../hooks/useChat";
-import Loading from "./Loading";
-import AccordionMenu from "./AccordionMenu";
+import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
+import useAPI from "../hooks/useAPI";
+import LoadingAnimation from "./LoadingAnimation";
+import ModelSelectMenu from "./ModelSelectMenu";
 import NewChatButton from "./NewChatButton";
-
-import "./Chat.css";
+import "./styles/Chat.css";
 
 const Chat = () => {
-  const { state, prompt, updatePrompt, submitPrompt, submitOnEnter, clearConversation, dispatch } =
-    useChat();
+  const {
+    state,
+    prompt,
+    updatePrompt,
+    submitPrompt,
+    submitOnEnter,
+    clearConversation,
+    dispatch,
+  } = useAPI();
 
   const models = ["llama3", "codellama", "gemma", "mistral"];
   const chatWindowRef = useRef(null);
@@ -21,10 +29,9 @@ const Chat = () => {
 
   return (
     <div className="chatContainer">
-      {/* Header Container */}
       <div className="headerContainer">
         <NewChatButton clearConversation={clearConversation} />
-        <AccordionMenu
+        <ModelSelectMenu
           models={models}
           selectedModel={state.model}
           onSelectModel={(e) =>
@@ -32,36 +39,34 @@ const Chat = () => {
           }
         />
       </div>
-
-      {/* Message Display Window */}
       <div className="chatWindow" ref={chatWindowRef}>
         {state.conversation.map((entry, index) => (
           <div
             key={index}
             className={`chatMessage ${
-              entry.type === "user" ? "userChat" : "botChat"
+              entry.type === "user" ? "userChat" : "botChat markdown"
             }`}
           >
-            {entry.text}
+            {entry.type === "user" ? (
+              entry.text
+            ) : (
+              <ReactMarkdown remarkPlugins={[gfm]}>{entry.text}</ReactMarkdown>
+            )}
           </div>
         ))}
-
-        {/* Loading State */}
         {state.loading && (
           <div className="chatMessage botChat">
             <div className="loadingWrapper">
-              <Loading />
+              <LoadingAnimation />
             </div>
           </div>
         )}
-
-        {/* Simulated-Typing State */}
         {state.typing && (
-          <div className="chatMessage botChat">{state.typing}</div>
+          <div className="chatMessage botChat markdown">
+            <ReactMarkdown remarkPlugins={[gfm]}>{state.typing}</ReactMarkdown>
+          </div>
         )}
       </div>
-
-      {/* User Input Area */}
       <div className="inputContainer">
         <form onSubmit={submitPrompt}>
           <textarea
