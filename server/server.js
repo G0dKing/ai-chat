@@ -39,9 +39,7 @@ app.post("/ai-chat", async (req, res) => {
     console.log("Request body:", req.body);
 
     const messages = [
-      {
-        role: "system" || process.env.ROLE, content: instruction || process.env.INSTRUCTION ||'You are a helpful assistant' ,},
-      { role: "user", content: prompt },
+     { role: "user", content: prompt },
     ];
 
     const completion = await ollama.chat.completions.create({
@@ -53,7 +51,7 @@ app.post("/ai-chat", async (req, res) => {
     conversation.push(response);
     res.status(200).json({ message: response });
   } catch (error) {
-    console.error("Error:", error); // Improved error logging
+    console.error("Error:", error);
     res.status(500).json({ error: "Server Error" });
   }
 });
@@ -63,21 +61,23 @@ app.get("/ai/chat", (req, res) => {
   res.status(200).json({ messages: conversation });
 });
 
-// Serve Client Build Files
-app.use(
-  express.static(path.join(__dirname, "..", "client", "dist"), {
-    maxAge: "1d",
-  })
-);
+// Serve Client Build Files in Production
+if (process.env.NODE_ENV !== 'production') {
+    app.use(
+        express.static(path.join(__dirname, "..", "client", "dist"), {
+            maxAge: "1d",
+        })
+    );
 
 // Fallback for SPA
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"), {
-    cacheControl: true,
-  });
-});
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"), {
+            cacheControl: true,
+        });
+    });
+}
 
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server Status: LIVE ( http://${HOST}:${PORT} )`);
 });
