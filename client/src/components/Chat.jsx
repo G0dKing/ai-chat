@@ -1,3 +1,5 @@
+// @c/Chat.jsx
+
 import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -18,7 +20,7 @@ const Chat = () => {
     dispatch,
   } = useAPI();
 
-  const models = ["llama3.1", "codellama", "gemma", "mistral"];
+  const models = ["Gemini-2.0-Flash"];
   const chatWindowRef = useRef(null);
 
   useEffect(() => {
@@ -75,9 +77,7 @@ const Chat = () => {
             onKeyDown={submitOnEnter}
             placeholder="Say something..."
           />
-          <button className="submitButton" type="submit">
-            SUBMIT
-          </button>
+            <button className="submitButton" type="submit">SUBMIT</button>
         </form>
       </div>
     </div>

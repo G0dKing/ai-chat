@@ -1,21 +1,19 @@
 {
-  "name": "backend",
+  "name": "ai-chat-server",
   "main": "server.js",
-  "version": "0.3",
+  "version": "4.0",
+  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "axios": "^1.7.2",
+    "@google/generative-ai": "latest",
     "cors": "latest",
-    "express": "latest",
+    "dotenv": "latest",
+    "express": "^4.19.2",
     "express-rate-limit": "latest",
-    "https": "^1.0.0",
-    "ollama": "^0.5.1",
-    "openai": "^4.47.1",
-    "redis": "^4.6.14"
-  },
-  "devDependencies": {
-    "dotenv": "latest"
+    "path": "latest",
+    "fs": "latest",
+    "url": "latest"
   }
 }
